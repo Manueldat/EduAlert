@@ -1,6 +1,6 @@
 # EduAlert — Hướng dẫn bắt đầu
 
-Đồ án **Các công nghệ lập trình hiện đại** của Nguyễn Tiến Đạt (2451010014) và Nguyễn Nhật Tân (2451010039).
+Project **Các công nghệ lập trình hiện đại** của Nguyễn Tiến Đạt và Nguyễn Nhật Tân.
 
 Hệ thống hỗ trợ CVHT theo dõi lớp, kiểm tra dấu hiệu học tập hiện tại và dự báo kỳ tiếp theo. Đây là **bản chạy thử hoàn chỉnh với dữ liệu giả lập**. Quy tắc và nhãn demo không phải quy chế của một trường. Các chỉ số ML chỉ đo trên dữ liệu giả lập.
 
