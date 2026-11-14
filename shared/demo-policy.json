@@ -1,0 +1,15 @@
+{
+  "version":"demo-v1",
+  "notice":"Quy tắc giả lập phục vụ đồ án; không phải quy chế của một trường hay quyết định học vụ.",
+  "passGrade":1.0,
+  "warningGpa":1.4,
+  "warningCpa":1.8,
+  "warningFailedRatio":0.5,
+  "warningDebtCredits":24,
+  "watchGpaDrop":0.5,
+  "watchCpa":2.0,
+  "watchProgressRatio":0.7,
+  "watchPrerequisiteFailures":2,
+  "maxCreditsPerTerm":40,
+  "cpaRule":"Điểm cao nhất trong các lần học đã chốt của từng học phần; tính cả học phần chưa đạt. Tín chỉ đạt chỉ cộng một lần."
+}

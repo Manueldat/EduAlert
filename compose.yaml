@@ -1,0 +1,50 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Run npm run setup first}
+    ports: ["127.0.0.1:1433:1433"]
+    volumes: ["sql-data:/var/opt/mssql"]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' -b -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    depends_on:
+      sqlserver: {condition: service_healthy}
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -b -Q \"IF DB_ID('edualert') IS NULL CREATE DATABASE edualert;\""]
+  ml:
+    build: {context: ., dockerfile: ml/Dockerfile}
+    environment:
+      ML_API_KEY: ${ML_API_KEY:?Run npm run setup first}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,json; assert json.load(urllib.request.urlopen('http://127.0.0.1:8000/health'))['status']=='ok'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+  web:
+    build: .
+    depends_on:
+      db-init: {condition: service_completed_successfully}
+      ml: {condition: service_healthy}
+    environment:
+      DB_PROVIDER: sqlserver
+      DATABASE_URL: "sqlserver://sqlserver:1433;database=edualert;user=sa;password=${MSSQL_SA_PASSWORD};encrypt=true;trustServerCertificate=true"
+      JWT_SECRET: ${JWT_SECRET:?Run npm run setup first}
+      ML_API_KEY: ${ML_API_KEY}
+      ML_URL: http://ml:8000
+      ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      COOKIE_SECURE: "false"
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-EduAlert!2026}
+    ports: ["127.0.0.1:3000:3000"]
+volumes:
+  sql-data:

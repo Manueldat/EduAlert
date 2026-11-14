@@ -1,0 +1,14 @@
+node_modules/
+.env
+.venv/
+__pycache__/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+frontend/dist/
+artifacts/*.joblib
+artifacts/training_rows.csv
+reports/*.log
+backend/prisma/active.prisma
+backend/prisma/test.prisma

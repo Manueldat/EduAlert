@@ -1,0 +1,165 @@
+{
+  "modelVersion": "synthetic-v1-6898232b-randomforest",
+  "featureSchema": "academic-v1",
+  "policyVersion": "demo-v1",
+  "dataType": "SYNTHETIC",
+  "warning": "Chỉ kiểm định trên dữ liệu giả lập. Điểm dự báo không chứng minh hiệu quả trên sinh viên thật.",
+  "target": "Thỏa ít nhất một điều kiện cảnh báo DEMO ở học kỳ kế tiếp",
+  "algorithm": "RandomForest",
+  "features": [
+    "gpa",
+    "cpa",
+    "gpa_drop",
+    "failed_ratio",
+    "debt_credits",
+    "progress_ratio",
+    "prereq_failures",
+    "warning_count"
+  ],
+  "thresholds": {
+    "yellow": 0.21,
+    "red": 0.33
+  },
+  "selectionMetrics": {
+    "LogisticRegression": {
+      "n": 560,
+      "positive_rate": 0.3125,
+      "average_precision": 0.8624817101018584,
+      "roc_auc": 0.9117179962894248,
+      "brier": 0.10563392989108411,
+      "precision": 0.8507462686567164,
+      "recall": 0.6514285714285715,
+      "f1": 0.7378640776699029,
+      "confusion_matrix_tn_fp_fn_tp": [
+        365,
+        20,
+        61,
+        114
+      ]
+    },
+    "RandomForest": {
+      "n": 560,
+      "positive_rate": 0.3125,
+      "average_precision": 0.8636611201282577,
+      "roc_auc": 0.9107977736549165,
+      "brier": 0.10508084642377523,
+      "precision": 0.8518518518518519,
+      "recall": 0.6571428571428571,
+      "f1": 0.7419354838709677,
+      "confusion_matrix_tn_fp_fn_tp": [
+        365,
+        20,
+        60,
+        115
+      ]
+    }
+  },
+  "test": {
+    "n": 560,
+    "positive_rate": 0.2392857142857143,
+    "average_precision": 0.8424813950917888,
+    "roc_auc": 0.9077762595473338,
+    "brier": 0.08707221817208922,
+    "precision": 0.7461538461538462,
+    "recall": 0.7238805970149254,
+    "f1": 0.7348484848484849,
+    "confusion_matrix_tn_fp_fn_tp": [
+      393,
+      33,
+      37,
+      97
+    ]
+  },
+  "testAtYellow": {
+    "n": 560,
+    "positive_rate": 0.2392857142857143,
+    "average_precision": 0.8424813950917888,
+    "roc_auc": 0.9077762595473338,
+    "brier": 0.08707221817208922,
+    "precision": 0.6171428571428571,
+    "recall": 0.8059701492537313,
+    "f1": 0.6990291262135923,
+    "confusion_matrix_tn_fp_fn_tp": [
+      359,
+      67,
+      26,
+      108
+    ]
+  },
+  "dummyBaseline": {
+    "n": 560,
+    "positive_rate": 0.2392857142857143,
+    "average_precision": 0.2392857142857143,
+    "roc_auc": 0.5,
+    "brier": 0.18206349206349207,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "confusion_matrix_tn_fp_fn_tp": [
+      426,
+      0,
+      134,
+      0
+    ]
+  },
+  "calibration": {
+    "mean_predicted": [
+      0.012480788411769852,
+      0.038347752128964366,
+      0.06758099633930631,
+      0.09810497530780384,
+      0.1284321182497694,
+      0.20836603785576147,
+      0.5095351504423524,
+      0.8418502720983725
+    ],
+    "observed_fraction": [
+      0.012658227848101266,
+      0.03278688524590164,
+      0.05714285714285714,
+      0.07142857142857142,
+      0.1,
+      0.22857142857142856,
+      0.44285714285714284,
+      0.9714285714285714
+    ]
+  },
+  "splitCounts": {
+    "train": {
+      "rows": 1680,
+      "students": 840,
+      "feature_time_min": 4011,
+      "target_time_max": 4025
+    },
+    "selection": {
+      "rows": 560,
+      "students": 280,
+      "feature_time_min": 4029,
+      "target_time_max": 4031
+    },
+    "calibration": {
+      "rows": 560,
+      "students": 280,
+      "feature_time_min": 4035,
+      "target_time_max": 4037
+    },
+    "threshold": {
+      "rows": 560,
+      "students": 280,
+      "feature_time_min": 4041,
+      "target_time_max": 4043
+    },
+    "test": {
+      "rows": 560,
+      "students": 280,
+      "feature_time_min": 4047,
+      "target_time_max": 4049
+    }
+  },
+  "dataSha256": "6898232b4140bab6bdc70dc90ec209a09b7b4d9fac78a59193927e4c90c6c8dd",
+  "sklearnVersion": "1.8.0",
+  "seed": 2026,
+  "createdAt": "2026-11-14T03:36:58.317930+00:00",
+  "thresholdMethod": "Yellow: largest threshold with validation recall >= .85; red: best validation F1 >= yellow + .10. Test set untouched.",
+  "cpaPolicy": "Điểm cao nhất trong các lần học đã chốt của từng học phần; tính cả học phần chưa đạt. Tín chỉ đạt chỉ cộng một lần."
+}

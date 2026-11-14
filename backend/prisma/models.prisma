@@ -1,0 +1,130 @@
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  name String
+  passwordHash String
+  role String @default("ADVISOR")
+  classes AdvisingClass[]
+  sessions Session[]
+  notes Note[]
+}
+model Session {
+  id String @id
+  userId String
+  expiresAt DateTime
+  user User @relation(fields:[userId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+}
+model Program {
+  id String @id @default(cuid())
+  name String
+  totalCredits Int
+  creditsPerTerm Int
+  classes AdvisingClass[]
+}
+model AdvisingClass {
+  id String @id @default(cuid())
+  name String @unique
+  advisorId String
+  programId String
+  advisor User @relation(fields:[advisorId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  program Program @relation(fields:[programId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  students Student[]
+}
+model Student {
+  id String @id @default(cuid())
+  code String @unique
+  name String
+  classId String
+  status String @default("ACTIVE")
+  entryOrdinal Int @default(1)
+  admissionScore Float?
+  revision Int @default(1)
+  advisingClass AdvisingClass @relation(fields:[classId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  semesters Semester[]
+  assessments Assessment[]
+  alerts Alert[]
+}
+model Term {
+  id String @id @default(cuid())
+  name String @unique
+  ordinal Int @unique
+  semesters Semester[]
+}
+model Course {
+  id String @id @default(cuid())
+  code String @unique
+  name String
+  credits Int
+  prerequisiteId String?
+  prerequisite Course? @relation("Prerequisite", fields:[prerequisiteId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  dependents Course[] @relation("Prerequisite")
+  grades Grade[]
+}
+model Semester {
+  id String @id @default(cuid())
+  studentId String
+  termId String
+  finalized Boolean @default(false)
+  paused Boolean @default(false)
+  officialWarning Boolean @default(false)
+  student Student @relation(fields:[studentId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  term Term @relation(fields:[termId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  grades Grade[]
+  @@unique([studentId, termId])
+}
+model Grade {
+  id String @id @default(cuid())
+  semesterId String
+  courseId String
+  score Float?
+  semester Semester @relation(fields:[semesterId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  course Course @relation(fields:[courseId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  @@unique([semesterId, courseId])
+}
+model Assessment {
+  id String @id @default(cuid())
+  studentId String
+  fingerprint String
+  revision Int
+  termOrdinal Int?
+  targetOrdinal Int?
+  priority String
+  mlStatus String
+  modelVersion String?
+  probability Float?
+  payload String // LARGE_TEXT
+  createdAt DateTime @default(now())
+  student Student @relation(fields:[studentId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  @@index([studentId, createdAt])
+}
+model Alert {
+  id String @id @default(cuid())
+  studentId String
+  termOrdinal Int
+  severity String
+  active Boolean @default(true)
+  workflow String @default("NEW")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student Student @relation(fields:[studentId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  notes Note[]
+  @@unique([studentId, termOrdinal])
+}
+model Note {
+  id String @id @default(cuid())
+  alertId String
+  authorId String
+  body String // LARGE_TEXT
+  workflow String
+  createdAt DateTime @default(now())
+  alert Alert @relation(fields:[alertId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  author User @relation(fields:[authorId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+}
+model Audit {
+  id String @id @default(cuid())
+  actorId String
+  action String
+  subjectId String
+  details String // LARGE_TEXT
+  createdAt DateTime @default(now())
+}

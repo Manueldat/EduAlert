@@ -1,0 +1,137 @@
+generator client {
+ provider = "prisma-client-js"
+}
+datasource db {
+ provider = "sqlserver"
+ url = env("DATABASE_URL")
+}
+model User {
+  id String @db.NVarChar(191) @id @default(cuid())
+  email String @db.NVarChar(191) @unique
+  name String @db.NVarChar(191)
+  passwordHash String @db.NVarChar(191)
+  role String @db.NVarChar(191) @default("ADVISOR")
+  classes AdvisingClass[]
+  sessions Session[]
+  notes Note[]
+}
+model Session {
+  id String @db.NVarChar(191) @id
+  userId String @db.NVarChar(191)
+  expiresAt DateTime
+  user User @relation(fields:[userId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+}
+model Program {
+  id String @db.NVarChar(191) @id @default(cuid())
+  name String @db.NVarChar(191)
+  totalCredits Int
+  creditsPerTerm Int
+  classes AdvisingClass[]
+}
+model AdvisingClass {
+  id String @db.NVarChar(191) @id @default(cuid())
+  name String @db.NVarChar(191) @unique
+  advisorId String @db.NVarChar(191)
+  programId String @db.NVarChar(191)
+  advisor User @relation(fields:[advisorId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  program Program @relation(fields:[programId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  students Student[]
+}
+model Student {
+  id String @db.NVarChar(191) @id @default(cuid())
+  code String @db.NVarChar(191) @unique
+  name String @db.NVarChar(191)
+  classId String @db.NVarChar(191)
+  status String @db.NVarChar(191) @default("ACTIVE")
+  entryOrdinal Int @default(1)
+  admissionScore Float?
+  revision Int @default(1)
+  advisingClass AdvisingClass @relation(fields:[classId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  semesters Semester[]
+  assessments Assessment[]
+  alerts Alert[]
+}
+model Term {
+  id String @db.NVarChar(191) @id @default(cuid())
+  name String @db.NVarChar(191) @unique
+  ordinal Int @unique
+  semesters Semester[]
+}
+model Course {
+  id String @db.NVarChar(191) @id @default(cuid())
+  code String @db.NVarChar(191) @unique
+  name String @db.NVarChar(191)
+  credits Int
+  prerequisiteId String? @db.NVarChar(191)
+  prerequisite Course? @relation("Prerequisite", fields:[prerequisiteId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  dependents Course[] @relation("Prerequisite")
+  grades Grade[]
+}
+model Semester {
+  id String @db.NVarChar(191) @id @default(cuid())
+  studentId String @db.NVarChar(191)
+  termId String @db.NVarChar(191)
+  finalized Boolean @default(false)
+  paused Boolean @default(false)
+  officialWarning Boolean @default(false)
+  student Student @relation(fields:[studentId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  term Term @relation(fields:[termId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  grades Grade[]
+  @@unique([studentId, termId])
+}
+model Grade {
+  id String @db.NVarChar(191) @id @default(cuid())
+  semesterId String @db.NVarChar(191)
+  courseId String @db.NVarChar(191)
+  score Float?
+  semester Semester @relation(fields:[semesterId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  course Course @relation(fields:[courseId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  @@unique([semesterId, courseId])
+}
+model Assessment {
+  id String @db.NVarChar(191) @id @default(cuid())
+  studentId String @db.NVarChar(191)
+  fingerprint String @db.NVarChar(191)
+  revision Int
+  termOrdinal Int?
+  targetOrdinal Int?
+  priority String @db.NVarChar(191)
+  mlStatus String @db.NVarChar(191)
+  modelVersion String? @db.NVarChar(191)
+  probability Float?
+  payload String @db.NVarChar(Max)
+  createdAt DateTime @default(now())
+  student Student @relation(fields:[studentId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  @@index([studentId, createdAt])
+}
+model Alert {
+  id String @db.NVarChar(191) @id @default(cuid())
+  studentId String @db.NVarChar(191)
+  termOrdinal Int
+  severity String @db.NVarChar(191)
+  active Boolean @default(true)
+  workflow String @db.NVarChar(191) @default("NEW")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student Student @relation(fields:[studentId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  notes Note[]
+  @@unique([studentId, termOrdinal])
+}
+model Note {
+  id String @db.NVarChar(191) @id @default(cuid())
+  alertId String @db.NVarChar(191)
+  authorId String @db.NVarChar(191)
+  body String @db.NVarChar(Max)
+  workflow String @db.NVarChar(191)
+  createdAt DateTime @default(now())
+  alert Alert @relation(fields:[alertId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+  author User @relation(fields:[authorId], references:[id], onDelete:NoAction, onUpdate:NoAction)
+}
+model Audit {
+  id String @db.NVarChar(191) @id @default(cuid())
+  actorId String @db.NVarChar(191)
+  action String @db.NVarChar(191)
+  subjectId String @db.NVarChar(191)
+  details String @db.NVarChar(Max)
+  createdAt DateTime @default(now())
+}

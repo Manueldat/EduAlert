@@ -1,0 +1,6 @@
+{
+  "result": "NOT_COMPLETED",
+  "reason": "Chromium launch blocked by execution environment: socket() failed: Operation not permitted. No browser assertions executed.",
+  "script": "scripts/test-ui.py",
+  "next": "Run the optional Playwright test and manual cases on the team computer."
+}

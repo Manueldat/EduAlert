@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "studentCode": "TEST1794101799545",
+  "modelVersion": "synthetic-v1-50df1c72-randomforest",
+  "probability": 0.5839427141822959,
+  "tests": [
+    "real ML API parity",
+    "persistent prediction",
+    "deduplication",
+    "advising note",
+    "logout"
+  ]
+}
