@@ -165,25 +165,7 @@ DATABASE_URL="sqlserver://localhost:1433;database=edualert;user=YOUR_LOGIN;passw
 
 Chạy lại `npm run db:prepare`, seed database rỗng và chạy hai terminal như cách A. Không cần đổi code React hay Python. `db:prepare` dùng db push cho demo ban đầu; xem docs/09_DEPLOYMENT.md để quản lý thay đổi schema có version.
 
-## 6. Học và thực hiện đủ 12 bước
-
-Đọc **docs/00_ROADMAP_VA_HUONG_DAN.md**. Tài liệu chỉ rõ làm gì, đọc/sửa file nào, chạy lệnh gì và kết quả cần kiểm tra cho từng bước.
-
-| Tài liệu | Nội dung |
-|---|---|
-| docs/01_YEU_CAU_NGHIEP_VU.md | Yêu cầu, quyền, quy tắc, quyết định và phần chưa có dữ liệu thật |
-| docs/02_DU_LIEU_ML.md | Mốc dự đoán, nhãn, dữ liệu giả lập, chia tập, thay bằng dữ liệu thật |
-| docs/03_KIEN_TRUC_SO_DO.md | Kiến trúc, ERD, trình tự, trạng thái và cách tổ chức code |
-| docs/04_API.md | API và ví dụ request |
-| docs/05_KIEM_THU_DEMO.md | Test case và kịch bản bảo vệ |
-| docs/06_BAO_CAO.md | Báo cáo kỹ thuật bản demo và hạn chế |
-| docs/07_THUYET_TRINH.md | Dàn ý slide và lời dẫn demo |
-| docs/08_XU_LY_LOI.md | Lỗi cài đặt, port, database, Prisma, Python, ML |
-| docs/09_DEPLOYMENT.md | Local build, Docker, SQL Server và triển khai có HTTPS |
-| docs/10_BACKLOG_PHAN_CONG.md | User story, tiêu chí nghiệm thu và lịch học lại code cho nhóm hai người |
-| reports/VERIFICATION.md | Kết quả đã kiểm thử và phần chưa kiểm chứng |
-
-## 7. Cấu trúc và phạm vi đã triển khai
+## 6. Cấu trúc và phạm vi đã triển khai
 
 Frontend: React, Tailwind, Recharts, Socket.io client. Backend: Express, Prisma, JWT trong cookie HttpOnly kèm session DB, kiểm tra lớp trên API và người nhận thông báo. ML: pandas, scikit-learn, hiệu chỉnh xác suất, FastAPI có service key.
 
