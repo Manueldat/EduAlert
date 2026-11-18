@@ -81,7 +81,7 @@ export async function seed(db, { evaluate = false } = {}) {
         prerequisiteId: i >= 6 ? `c${i - 5}` : null,
       },
     });
-  const surnames = [
+  const studentNames = [
     "Nguyễn Hoàng An",
   "Trần Thanh Bình",
   "Lê Ngọc Chi",
